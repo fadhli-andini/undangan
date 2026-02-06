@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="The Wedding of Fadhli & Andini">
+    <meta property="og:description" content="Kamis, 16 April 2026 - Kami mengundang Anda untuk berbagi kebahagiaan dalam acara pernikahan kami.">
+    <meta property="og:image" content="https://github.com/fadhli-andini/undangan/img/banner.jpg">
+    <meta property="og:url" content="https://fadhli-andini.github.io/undangan/">
+
+    <title>The Wedding of Fadhli & Andini</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --burgundy: #800020;
+            --gold: #D4AF37;
+            --cream: #F5F5DC;
+            --soft-gold: #fdf5e6;
+            --text-dark: #2c2c2c;
+        }
+
+        /* Reset & Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #1a1a1a; font-family: 'Cormorant Garamond', serif; color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            background-color: var(--cream);
+            position: relative;
+            min-height: 100vh;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        /* --- CURTAIN --- */
+        #curtain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(128, 0, 32, 0.92), rgba(128, 0, 32, 0.95)), 
+                        url('https://github.com/fadhli-andini/undangan/img/banner.jpg');
+            background-size: cover; background-position: center;
+            z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; color: var(--gold);
+            text-align: center; transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+            padding: 30px;
+        }
+
+        .curtain-content h1 { font-family: 'Great Vibes', cursive; font-size: 3.5rem; margin: 10px 0; }
+        .guest-box { margin: 25px 0; padding: 20px; border: 1px double var(--gold); background: rgba(255, 255, 255, 0.05); }
+
+        /* --- HERO --- */
+        #hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: radial-gradient(circle, var(--soft-gold) 0%, var(--cream) 100%); text-align: center;
+        }
+        .hero-names {
+            font-family: 'Cinzel Decorative', cursive; font-size: 2.2rem; color: var(--burgundy);
+            opacity: 0; transform: scale(0.9); transition: 2s ease-out 0.5s;
+        }
+        .reveal-active .hero-names { opacity: 1; transform: scale(1); }
+
+        /* --- GALLERY --- */
+        .slider-container {
+            width: 100%; aspect-ratio: 3 / 2; position: relative;
+            margin: 30px 0; border: 4px solid var(--gold); overflow: hidden;
+        }
+        .slides img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0; transition: opacity 1.5s ease-in-out;
+            cursor: zoom-in;
+        }
+        .slides img.active { opacity: 1; z-index: 2; }
+        .nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(128, 0, 32, 0.6); color: var(--gold);
+            border: none; width: 40px; height: 50px; cursor: pointer; z-index: 10;
+        }
+        .prev { left: 0; } .next { right: 0; }
+
+        /* --- MODAL ZOOM --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); display: none;
+            justify-content: center; align-items: center; z-index: 10000;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-overlay img { max-width: 90%; max-height: 85%; border: 2px solid var(--gold); }
+
+        /* --- UI ELEMENTS --- */
+        section { padding: 60px 25px; text-align: center; }
+        h2 { font-family: 'Great Vibes', cursive; font-size: 3rem; color: var(--burgundy); margin-bottom: 20px; }
+        .btn-luxury {
+            display: inline-block; padding: 12px 24px; background: var(--burgundy); color: var(--gold);
+            border: 1px solid var(--gold); font-family: 'Cinzel Decorative', cursive;
+            text-decoration: none; cursor: pointer; transition: 0.3s; margin-top: 20px;
+        }
+        .btn-luxury:hover { background: var(--gold); color: var(--burgundy); }
+
+        #timer { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 25px 0; }
+        .time-box { background: var(--burgundy); color: var(--gold); padding: 10px 5px; border-radius: 4px; font-size: 0.7rem; }
+        .time-box span { font-size: 1.2rem; font-weight: bold; display: block; }
+
+        .music-control {
+            position: fixed; bottom: 20px; left: 20px; z-index: 1000;
+            background: var(--gold); width: 45px; height: 45px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .divider { width: 80px; height: 2px; background: var(--gold); margin: 20px auto; position: relative; }
+        .divider::after { content: '◈'; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--cream); padding: 0 5px; color: var(--gold); }
+
+        /* Guestbook list */
+        .msg-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 12px; border-left: 5px solid var(--burgundy); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <div id="imageModal" class="modal-overlay" onclick="closeModal()">
+        <img id="modalImg" src="">
+    </div>
+
+    <div id="curtain">
+        <div class="curtain-content">
+            <p style="letter-spacing: 3px;">THE WEDDING OF</p>
+            <h1>Fadhli & Andini</h1>
+            <div class="guest-box">
+                <p style="font-style: italic; font-size: 0.9rem;">Yth. Bapak/Ibu/Saudara/i:</p>
+                <h3 id="guest-target" style="color: var(--gold); font-family: serif; margin-top: 5px;">Nama Tamu</h3>
+            </div>
+            <button class="btn-luxury" onclick="openInvitation()">OPEN INVITATION</button>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <section id="hero">
+            <p style="font-style: italic; color: var(--burgundy); margin-bottom: 10px;">Walimatul 'Urs</p>
+            <div class="hero-names">Muhammad Fadhli Idris <br>&<br> Andini</div>
+            <div class="divider"></div>
+            <p style="letter-spacing: 4px; font-weight: bold;">16 . 04 . 2026</p>
+        </section>
+		
+        <section data-aos="fade-up">
+            <p style="font-style: italic; font-size: 1.1rem; line-height: 1.8;">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya."</p>
+            <p style="margin-top: 20px; font-weight: bold; color: var(--burgundy);">(QS. Ar-Rum: 21)</p>
+        </section>
+
+        <section data-aos="fade-up">
+            <h2>Kedua Mempelai</h2>
+            <div style="margin-bottom: 40px;">
+                <h3 style="font-family: 'Cinzel Decorative'; color: var(--burgundy); font-size: 1.5rem;">Muhammad Fadhli Idris</h3>
+                <p>Putra dari Bapak M. Idris Kemad (Alm)<br>& Ibu Aisyah Halman</p>
+            </div>
+            <div class="divider"></div>
+            <div style="margin-top: 40px;">
+                <h3 style="font-family: 'Cinzel Decorative'; color: var(--burgundy); font-size: 1.5rem;">Andini</h3>
+                <p>Putri dari Bapak Abdullah Basir<br>& Ibu Suharti</p>
+            </div>
+        </section>
+
+        <section data-aos="fade-up">
+            <h2>Glimpse of Us</h2>
+            <p style="font-size: 0.8rem; margin-bottom: 10px; opacity: 0.7;">(Klik foto untuk memperbesar)</p>
+            <div class="slider-container">
+                <button class="nav-btn prev" onclick="moveSlide(-1)">❮</button>
+                <button class="nav-btn next" onclick="moveSlide(1)">❯</button>
+                <div class="slides" id="slides">
+                    <img src="img/IMG-0001.jpg" class="active" onclick="openModal(this.src)">
+					<img src="img/IMG-0002.jpg" onclick="openModal(this.src)">
+					<img src="img/IMG-0003.jpg" onclick="openModal(this.src)">
+					<img src="img/IMG-0004.jpg" onclick="openModal(this.src)">
+					<img src="img/IMG-0005.jpg" onclick="openModal(this.src)">
+					<img src="img/IMG-0006.jpg" onclick="openModal(this.src)">
+					<img src="img/IMG-0007.jpg" onclick="openModal(this.src)">
+					<img src="img/IMG-0008.jpg" onclick="openModal(this.src)">
+					<img src="img/IMG-0009.jpg" onclick="openModal(this.src)">
+					<img src="img/IMG-0010.jpg" onclick="openModal(this.src)">
+                </div>
+            </div>
+        </section>
+
+        <section data-aos="fade-up">
+            <h2>Akad & Resepsi</h2>
+            <p style="font-weight: bold; font-size: 1.3rem; color: var(--burgundy);">Kamis, 16 April 2026</p>
+            <p style="font-size: 1.1rem;">08:00 WITA - Selesai</p>
+            <p style="font-weight: bold; margin-top: 10px;">Balai Pertemuan Umum Lumbis</p>
+            
+            <div id="timer">
+                <div class="time-box"><span id="days">0</span>Hari</div>
+                <div class="time-box"><span id="hours">0</span>Jam</div>
+                <div class="time-box"><span id="mins">0</span>Menit</div>
+                <div class="time-box"><span id="secs">0</span>Detik</div>
+            </div>
+
+            <a href="https://www.google.com/maps/search/BPU+Lumbis" target="_blank" class="btn-luxury">LIHAT LOKASI</a>
+        </section>
+		
+		<div class="divider"></div>		
+
+        <section data-aos="fade-up">
+            <h2>Acara Keluarga</h2>
+            <p style="font-weight: bold; font-size: 1.3rem; color: var(--burgundy);">Rabu, 22 April 2026</p>
+            <p style="font-size: 1.1rem;">08:00 WITA - Selesai</p>
+            <p style="font-weight: bold; margin-top: 10px;">Gedung Serba Guna Desa Tagul</p>            
+        </section>
+		
+		<div class="divider"></div>
+
+        <section data-aos="fade-up">
+            <h2>Doa & Ucapan</h2>
+            <form id="guestbook-form">
+                <input type="text" id="guest-name" placeholder="Nama Lengkap" required style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--gold); border-radius: 4px;">
+                <textarea id="guest-msg" placeholder="Berikan doa & ucapan..." rows="4" required style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--gold); border-radius: 4px;"></textarea>
+                <button type="submit" id="submit-btn" class="btn-luxury" style="width: 100%;">KIRIM UCAPAN</button>
+            </form>
+            <div id="messages-list" style="margin-top: 30px; text-align: left; max-height: 400px; overflow-y: auto; padding: 5px;">
+                <p style="text-align: center; opacity: 0.6;">Memuat ucapan...</p>
+            </div>
+        </section>
+
+        <section style="background: var(--burgundy); color: var(--gold); padding: 50px 25px;">
+            <p>Merupakan kebahagiaan bagi kami atas kehadiran dan doa restu Anda.</p>
+			<p style="margin-top: 30px; font-size: 1.2rem;"><b>Turut Mengundang:</b></p>
+            
+            <div style="margin-top: 15px; font-size: 0.95rem;">
+                <p><b>Keluarga Mempelai Pria:</b><br>
+                Keluarga Besar M. Idris Kemad<br></p>
+					<p>(Sebutkan Nama/Keluarga Lainnya)</p>
+					<p>(Sebutkan Nama/Keluarga Lainnya)</p>
+					<p>(Sebutkan Nama/Keluarga Lainnya)</p>
+				                
+                <p style="margin-top: 20px;"><b>Keluarga Mempelai Wanita:</b><br>
+                Keluarga Besar Abdullah Basir<br>
+					<p>(Sebutkan Nama/Keluarga Lainnya)</p>
+					<p>(Sebutkan Nama/Keluarga Lainnya)</p>
+					<p>(Sebutkan Nama/Keluarga Lainnya)</p>
+            </div>
+
+            <h2 style="color: var(--gold); margin-top: 40px; font-size: 2.5rem;">Fadhli & Andini</h2>
+            <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.8;">© 2026 Fadhli & Andini Wedding</p>
+        </section>
+    </div>
+
+    <audio id="myAudio" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    </audio>
+    <div class="music-control" onclick="toggleMusic()" id="musicBtn">🎵</div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // CONFIG (Ganti URL ini dengan API SheetDB Anda)
+        const SHEETDB_URL = 'https://sheetdb.io/api/v1/g899n2uas8lg7';
+        
+        let slideIndex = 0;
+        let autoSlideVar;
+        const allSlides = document.querySelectorAll('.slides img');
+
+        function openInvitation() {
+            document.getElementById('curtain').style.transform = 'translateY(-100%)';
+            document.body.classList.add('reveal-active');
+            
+            // Play Music
+            const audio = document.getElementById("myAudio");
+            audio.play().catch(e => console.log("Autoplay dicegah browser"));
+            
+            startAutoSlide();
+            fetchMessages();
+        }
+
+        // SLIDER LOGIC
+        function showSlides(n) {
+            if(allSlides.length === 0) return;
+            allSlides[slideIndex].classList.remove('active');
+            slideIndex = (slideIndex + n + allSlides.length) % allSlides.length;
+            allSlides[slideIndex].classList.add('active');
+        }
+
+        function moveSlide(n) {
+            clearInterval(autoSlideVar);
+            showSlides(n);
+            startAutoSlide();
+        }
+
+        function startAutoSlide() {
+            autoSlideVar = setInterval(() => showSlides(1), 5000);
+        }
+
+        // MODAL
+        function openModal(src) {
+            clearInterval(autoSlideVar);
+            const modal = document.getElementById('imageModal');
+            document.getElementById('modalImg').src = src;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+            startAutoSlide();
+        }
+
+        // MUSIC
+        function toggleMusic() {
+            const a = document.getElementById("myAudio");
+            const btn = document.getElementById("musicBtn");
+            if (a.paused) { a.play(); btn.innerText = "🎵"; }
+            else { a.pause(); btn.innerText = "🔇"; }
+        }
+
+        // COUNTDOWN
+        const targetDate = new Date("April 16, 2026 08:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const gap = targetDate - now;
+            if (gap > 0) {
+                document.getElementById('days').innerText = Math.floor(gap / (1000 * 60 * 60 * 24));
+                document.getElementById('hours').innerText = Math.floor((gap % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById('mins').innerText = Math.floor((gap % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('secs').innerText = Math.floor((gap % (1000 * 60)) / 1000);
+            }
+        }, 1000);
+
+        // GUEST NAME FROM URL (?to=Nama+Tamu)
+        const urlParams = new URLSearchParams(window.location.search);
+        const to = urlParams.get('to');
+        if (to) {
+            document.getElementById('guest-target').innerText = to;
+            document.getElementById('guest-name').value = to;
+        }
+
+        // GUESTBOOK FETCH & POST
+        async function fetchMessages() {
+            try {
+                const res = await fetch(SHEETDB_URL);
+                const data = await res.json();
+                const container = document.getElementById('messages-list');
+                
+                if (data.length === 0) {
+                    container.innerHTML = '<p style="text-align:center">Belum ada ucapan.</p>';
+                    return;
+                }
+
+                container.innerHTML = data.reverse().map(item => `
+                    <div class="msg-card">
+                        <b style="color:var(--burgundy)">${item.nama || 'Anonim'}</b>
+                        <p style="font-size:0.95rem; margin-top:5px;">${item.pesan || ''}</p>
+                    </div>
+                `).join('');
+            } catch (e) { 
+                document.getElementById('messages-list').innerHTML = '<p style="text-align:center; color:red;">Gagal memuat pesan.</p>';
+            }
+        }
+
+        document.getElementById('guestbook-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const nama = document.getElementById('guest-name').value;
+            const pesan = document.getElementById('guest-msg').value;
+
+            btn.innerText = "MENGIRIM...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(SHEETDB_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: { nama, pesan } })
+                });
+
+                if(response.ok) {
+                    document.getElementById('guest-msg').value = '';
+                    await fetchMessages();
+                    alert("Terima kasih atas doanya!");
+                }
+            } catch (err) {
+                alert("Gagal mengirim pesan.");
+            } finally {
+                btn.innerText = "KIRIM UCAPAN";
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
