@@ -116,6 +116,54 @@
 
         /* Guestbook list */
         .msg-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 12px; border-left: 5px solid var(--burgundy); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+		
+		/* Styling untuk Modal Gift */
+		.gift-content {
+			background: var(--cream);
+			width: 90%;
+			max-width: 400px;
+			padding: 30px;
+			border-radius: 15px;
+			border: 2px solid var(--gold);
+			text-align: center;
+			position: relative;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+		}
+
+		.bank-card {
+			background: white;
+			border: 1px solid var(--gold);
+			border-radius: 10px;
+			padding: 15px;
+			margin: 20px 0;
+		}
+
+		.bank-card h4 {
+			font-size: 1.4rem;
+			color: var(--burgundy);
+			margin: 10px 0;
+			letter-spacing: 1px;
+		}
+
+		.btn-copy {
+			background: var(--gold);
+			border: none;
+			padding: 5px 15px;
+			font-family: 'Cormorant Garamond', serif;
+			font-weight: bold;
+			cursor: pointer;
+			border-radius: 5px;
+			margin-top: 5px;
+		}
+
+		.close-modal {
+			position: absolute;
+			top: 10px;
+			right: 15px;
+			font-size: 25px;
+			cursor: pointer;
+			color: var(--burgundy);
+		}
     </style>
 </head>
 <body>
@@ -205,8 +253,41 @@
             <h2>Resepsi</h2>
             <p style="font-weight: bold; font-size: 1.3rem; color: var(--burgundy);">Rabu, 22 April 2026</p>
             <p style="font-size: 1.1rem;">09:00 WITA - Selesai</p>
-            <p style="font-weight: bold; margin-top: 10px;">Gedung Serba Guna Desa Tagul</p>            
+			<p style="font-weight: bold; margin-top: 10px;">Kediaman Mempelai Pria</p>
+            <p style="font-weight: bold; margin-top: 10px;">Jalan Kampung Kelapa, RT 03, Desa Tagul.</p>            
         </section>
+		
+		<div class="divider"></div>
+		
+		<section data-aos="fade-up">
+			<h2>Wedding Gift</h2>
+			<p>Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda ingin memberikan tanda kasih, Anda dapat mengirimkannya melalui:</p>
+			<br>
+			<button class="btn-luxury" onclick="openGiftModal()">KIRIM KADO</button>
+		</section>
+
+		<div id="giftModal" class="modal-overlay" onclick="closeGiftModal()">
+			<div class="gift-content" onclick="event.stopPropagation()">
+				<span class="close-modal" onclick="closeGiftModal()">&times;</span>
+				<h3>Digital Wedding Gift</h3>
+				<div class="divider"></div>
+				
+				<div class="bank-card">
+					<img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="BCA" style="height: 20px; margin-bottom: 10px;">
+					<p>Bank BCA</p>
+					<h4 id="rek-bca">7805177454</h4>
+					<p>A.n Muhammad Fadhli Idris</p>
+					<button class="btn-copy" onclick="copyRek('7805177454')">Salin No. Rekening</button>
+				</div>
+
+				<div class="bank-card">
+					<p>Bank Mandiri</p>
+					<h4 id="rek-mandiri">1370016326593</h4>
+					<p>A.n Muhammad Fadhli Idris</p>
+					<button class="btn-copy" onclick="copyRek('1370016326593')">Salin No. Rekening</button>
+				</div>
+			</div>
+		</div>
 		
 		<div class="divider"></div>
 
@@ -344,6 +425,23 @@
             document.getElementById('guest-target').innerText = to;
             document.getElementById('guest-name').value = to;
         }
+		
+		// Fungsi Membuka Modal Gift
+		function openGiftModal() {
+			document.getElementById('giftModal').style.display = 'flex';
+		}
+
+		// Fungsi Menutup Modal Gift
+		function closeGiftModal() {
+			document.getElementById('giftModal').style.display = 'none';
+		}
+
+		// Fungsi Salin Nomor Rekening
+		function copyRek(nomor) {
+			navigator.clipboard.writeText(nomor).then(() => {
+				alert("Nomor rekening berhasil disalin: " + nomor);
+			});
+		}
 
         // GUESTBOOK FETCH & POST
         async function fetchMessages() {
