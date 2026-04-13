@@ -444,55 +444,41 @@
 		}
 
         // GUESTBOOK FETCH & POST
-        async function fetchMessages() {
-            try {
-                const res = await fetch(SHEETDB_URL);
-                const data = await res.json();
-                const container = document.getElementById('messages-list');
-                
-                if (data.length === 0) {
-                    container.innerHTML = '<p style="text-align:center">Belum ada ucapan.</p>';
-                    return;
-                }
+        function loadComments() {
+		    const apiURL = 'https://script.google.com/macros/s/AKfycbz5EIdOGp5eTfgWiyRAIeROlH9Gg7DcNjgUGbVltvSk4zcEZIFc_m-aV4wCC5BBpw4TQA/exec';
+		    fetch(apiURL)
+		        .then(res => res.json())
+		        .then(data => {
+		            const container = document.getElementById('comments-container');
+		            container.innerHTML = '';
+		            data.reverse().forEach(item => {
+		                const div = document.createElement('div');
+		                div.className = 'comment-item';
+		                div.innerHTML = `<strong>${item.nama}</strong> <small>(${item.kehadiran})</small><p>${item.ucapan}</p>`;
+		                container.appendChild(div);
+		            });
+		        });
+		}
 
-                container.innerHTML = data.reverse().map(item => `
-                    <div class="msg-card">
-                        <b style="color:var(--burgundy)">${item.nama || 'Anonim'}</b>
-                        <p style="font-size:0.95rem; margin-top:5px;">${item.pesan || ''}</p>
-                    </div>
-                `).join('');
-            } catch (e) { 
-                document.getElementById('messages-list').innerHTML = '<p style="text-align:center; color:red;">Gagal memuat pesan.</p>';
-            }
-        }
-
-        document.getElementById('guestbook-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submit-btn');
-            const nama = document.getElementById('guest-name').value;
-            const pesan = document.getElementById('guest-msg').value;
-
-            btn.innerText = "MENGIRIM...";
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(SHEETDB_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: { nama, pesan } })
-                });
-
-                if(response.ok) {
-                    document.getElementById('guest-msg').value = '';
-                    await fetchMessages();
-                    alert("Terima kasih atas doanya!");
-                }
-            } catch (err) {
-                alert("Gagal mengirim pesan.");
-            } finally {
-                btn.innerText = "KIRIM UCAPAN";
-                btn.disabled = false;
-            }
+        function submitComment(event) {
+		    event.preventDefault();
+		    const apiURL = 'https://script.google.com/macros/s/AKfycbz5EIdOGp5eTfgWiyRAIeROlH9Gg7DcNjgUGbVltvSk4zcEZIFc_m-aV4wCC5BBpw4TQA/exec';
+		    const data = {
+		        nama: document.getElementById('nama').value,
+		        ucapan: document.getElementById('ucapan').value,
+		        kehadiran: document.getElementById('kehadiran').value
+		    };
+		
+		    fetch(apiURL, {
+		        method: 'POST',
+		        body: JSON.stringify(data)
+		    })
+		    .then(() => {
+		        alert('Ucapan berhasil dikirim!');
+		        loadComments(); // Refresh daftar ucapan
+		        document.getElementById('comment-form').reset();
+		    });
+		}
         });
     </script>
 </body>
